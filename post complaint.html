@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h2>Post a Complaint</h2>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Post a Complaint</button>
+</form>
+
+<h3>Map (use to pick coords)</h3>
+<div id="gmap" style="width:80%;height:300px"></div>
+
+<script>
+let map, marker;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('gmap'), { center: {lat:13.05, lng:80.22}, zoom:14 });
+  marker = new google.maps.Marker({ position: {lat:13.05, lng:80.22}, map: map, draggable: true });
+  google.maps.event.addListener(marker, 'dragend', function() {
+    const pos = marker.getPosition();
+    document.getElementById('id_lat').value = pos.lat();
+    document.getElementById('id_long').value = pos.lng();
+  });
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALqJlbylPKSaJ3RUOKXMkUvKUDPQwLJbQ&callback=initMap" async defer></script>
+
+{% endblock %}
